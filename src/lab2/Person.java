@@ -4,7 +4,7 @@ public class Person {
 
     private String idCardNumber;
     private String firstName;
-    private String lasttName;
+    private String lastName;
     private String gender;
 
     public String getIdCardNumber() {
@@ -23,12 +23,12 @@ public class Person {
         this.firstName = firstName;
     }
 
-    public String getLasttName() {
-        return this.lasttName;
+    public String getLastName() {
+        return this.lastName;
     }
 
-    public void setLasttName(String lasttName) {
-        this.lasttName = lasttName;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getGender() {
@@ -40,6 +40,6 @@ public class Person {
     }
 
     public String getFullName() {
-        return (this.firstName +" "+ this.lasttName);
+        return (this.firstName + " " + this.lastName);
     }
 }

@@ -222,7 +222,7 @@ public class ATM implements ATMAction {
                     } catch (java.util.InputMismatchException e) {
                         System.err.println("something went wrong!!!");
                         this.showServiceMenu(accountDetail);
-                    }                  
+                    }
                 }
                 case "4" -> {
                     System.out.println("*********************************");

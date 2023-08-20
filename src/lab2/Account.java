@@ -6,12 +6,12 @@ public class Account extends Person {
     private String password;
     private int cashBalance;
 
-    public Account(String userName, String password, String firstName, String lasttName, String gender, String idCardNumber, int cash) {
+    public Account(String userName, String password, String firstName, String lastName, String gender, String idCardNumber, int cash) {
         super.setIdCardNumber(idCardNumber);
         super.setFirstName(firstName);
-        super.setLasttName(lasttName);
+        super.setLastName(lastName);
         super.setGender(gender);
-        
+
         this.userName = userName;
         this.password = password;
         this.cashBalance = cash;
@@ -28,10 +28,9 @@ public class Account extends Person {
     public int getCashBalance() {
         return this.cashBalance;
     }
-    
-    public void setCashBalance(int cash){
+
+    public void setCashBalance(int cash) {
         this.cashBalance = cash;
     }
-    
 
 }
