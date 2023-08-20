@@ -5,16 +5,7 @@ public class Person {
     private String idCardNumber;
     private String firstName;
     private String lasttName;
-    private String gender;     //true is Men, false is Women
-    private Boolean adminId;  //true is admin, false is user
-
-    public Boolean getAdminId() {
-        return this.adminId;
-    }
-
-    public void setAdminId(Boolean adminId) {
-        this.adminId = adminId;
-    }
+    private String gender;
 
     public String getIdCardNumber() {
         return this.idCardNumber;
@@ -49,6 +40,6 @@ public class Person {
     }
 
     public String getFullName() {
-        return (this.firstName + this.lasttName);
+        return (this.firstName +" "+ this.lasttName);
     }
 }

@@ -13,7 +13,6 @@ public class Manager extends Person {
         super.setFirstName(firstName);
         super.setLasttName(lasttName);
         super.setGender(gender);
-        super.setAdminId(true);
 
         this.userName = userName;
         this.password = password;

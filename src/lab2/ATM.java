@@ -26,6 +26,7 @@ public class ATM implements ATMAction {
 
     @Override
     public void withDrawable(Account accDetail, int cash) {
+        System.out.println("*********************************");
         System.out.println("Username : " + accDetail.getUserName());
         System.out.println("Account name : " + accDetail.getFullName());
         System.out.println("Account withdrawal " + cash + " bath");
@@ -63,26 +64,28 @@ public class ATM implements ATMAction {
                 if (source.getIdCardNumber().equals(this.user.get(i).getIdCardNumber())) {
                     System.err.println("Unable to transfer money to the destination account.");
                     System.err.println("Because the destination and source accounts are the same account.");
-                    break;
-                } else if (cash < source.getCashBalance() && destinationBalance < 1000000) {
+                    this.showServiceMenu(source);
+                } else if (cash <= source.getCashBalance() && destinationBalance < 1000000) {
                     System.out.println("Username : " + source.getUserName());
                     System.out.println("From account name : " + source.getFullName());
                     System.out.println("To account name : " + this.user.get(i).getFullName());
                     System.out.println("Amount : " + cash);
                     source.setCashBalance(sourceBalance);
                     this.user.get(i).setCashBalance(destinationBalance);
-                    break;
+                    this.showServiceMenu(source);
                 } else if (cash > source.getCashBalance()) {
                     System.err.println("Unable to transfer money to the destination account.");
                     System.err.println("due to insufficient balance.");
-                    break;
-                } else if (destinationBalance < 1000000) {
+                    this.showServiceMenu(source);
+                } else if (destinationBalance > 1000000) {
                     System.err.println("Unable to transfer money to the destination account.");
                     System.err.println("because the balance amount of the destination account exceeds the limit.");
-                    break;
+                    this.showServiceMenu(source);
                 }
             }
         }
+        System.err.println("Unable to transfer money to the destination account.");
+        System.err.println("because The beneficiary's account information could not be found..");
     }
 
     public void login() {
@@ -137,14 +140,14 @@ public class ATM implements ATMAction {
     }
 
     public void showAdminMenu() {
-        System.out.println("*********************************");
         while (true) {
+            System.out.println("*********************************");
             Scanner userInput = new Scanner(System.in);
             System.out.println("ATM " + this.atmName);
             System.out.println("Admin account : " + admin.getUserName());
             System.out.println("Menu Service");
             System.out.println("1. Add Account");
-            System.out.println("2. Delete account");
+            System.out.println("2. Show all account");
             System.out.println("3. Exit");
             System.out.print("Choose : ");
             String choice = userInput.next();
@@ -153,23 +156,31 @@ public class ATM implements ATMAction {
                     Bank bank = new Bank(this);
                     bank.addAccount();
                 }
+                case "2" -> {
+                    System.out.println("*********************************");
+                    System.out.println("All Account in " + this.atmName);
+                    int i;
+                    for (i = 0; i < this.user.size(); ++i) {
+                        System.out.println((i + 1) + " : " + this.user.get(i).getUserName() + " : " + this.user.get(i).getFullName());
+                    }
+                    System.out.println((i + 1) + " : Back to admin menu Service");
+                    System.out.print("Select a number to view results or go back : ");
+                    choice = userInput.next();
+                    try {
+                        this.showDetail(Integer.parseInt(choice) - 1);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Please enter numerical data.");
+                    }
+                }
                 case "3" ->
                     this.login();
                 default ->
                     System.err.println("something went wrong!!!");
             }
-//                case "2":
-//                    System.out.println("*********************************");
-//                    System.out.println("Account ID : " + accountDetail.getAccountId());
-//                    System.out.print("Enter the amount you want to withdraw : ");
-//                    int cash = userInput.nextInt();
-//                    System.out.println("*********************************");
-//                    this.withdraw(cash, accountDetail);
-//                    break;
         }
     }
 
-    public void showServiceMenu(Account accountDetail) {
+    private void showServiceMenu(Account accountDetail) {
         while (true) {
             System.out.println("*********************************");
             Scanner userInput = new Scanner(System.in);
@@ -191,16 +202,27 @@ public class ATM implements ATMAction {
                     System.out.println("Username : " + accountDetail.getUserName());
                     System.out.println("Account name : " + accountDetail.getFullName());
                     System.out.print("Enter the amount you want to withdraw : ");
-                    int cash = userInput.nextInt();
-                    this.withDrawable(accountDetail, cash);
+                    try {
+                        int cash = userInput.nextInt();
+                        this.withDrawable(accountDetail, cash);
+                    } catch (java.util.InputMismatchException e) {
+                        System.err.println("something went wrong!!!");
+                        this.showServiceMenu(accountDetail);
+                    }
+
                 }
                 case "3" -> {
                     System.out.println("*********************************");
                     System.out.println("Username : " + accountDetail.getUserName());
                     System.out.println("Account name : " + accountDetail.getFullName());
                     System.out.print("Enter the amount you wish to deposit : ");
-                    int cash = userInput.nextInt();
-                    this.depositeable(accountDetail, cash);
+                    try {
+                        int cash = userInput.nextInt();
+                        this.depositeable(accountDetail, cash);
+                    } catch (java.util.InputMismatchException e) {
+                        System.err.println("something went wrong!!!");
+                        this.showServiceMenu(accountDetail);
+                    }                  
                 }
                 case "4" -> {
                     System.out.println("*********************************");
@@ -215,9 +237,28 @@ public class ATM implements ATMAction {
                 case "5" -> {
                     this.login();
                 }
-                default ->
+                default -> {
                     System.err.println("something went wrong!!!");
+                    this.showServiceMenu(accountDetail);
+                }
             }
+        }
+    }
+
+    private void showDetail(int index) {
+        if (index < this.user.size()) {
+            System.out.println("*********************************");
+            System.out.println("Username : " + this.user.get(index).getUserName());
+            System.out.println("Password : " + this.user.get(index).getPassword());
+            System.out.println("Name     : " + this.user.get(index).getFullName());
+            System.out.println("ID       : " + this.user.get(index).getIdCardNumber());
+            System.out.println("Gender   : " + this.user.get(index).getGender());
+            System.out.println("Balance  : " + this.user.get(index).getCashBalance());
+        } else if (index == this.user.size()) {
+            this.showAdminMenu();
+        } else {
+            System.out.println("*********************************");
+            System.err.println("something went wrong!!!");
         }
     }
 

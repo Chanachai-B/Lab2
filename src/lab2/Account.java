@@ -11,7 +11,6 @@ public class Account extends Person {
         super.setFirstName(firstName);
         super.setLasttName(lasttName);
         super.setGender(gender);
-        super.setAdminId(false);
         
         this.userName = userName;
         this.password = password;

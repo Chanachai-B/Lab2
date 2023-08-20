@@ -4,54 +4,52 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Bank {
-
+    
     private String bankName;
     private ArrayList<Account> user = new ArrayList<>();
     private Manager admin;
-
+    
     public Bank(String name) {
         this.bankName = name;
         System.out.println("*********************************");
         System.out.println("Welcome to " + this.bankName + " Management System");
         this.addAdmin();
     }
-
+    
     public Bank(ATM atm) {
         this.bankName = atm.getAtmName();
         this.user = atm.getUser();
         this.admin = atm.getAdmin();
     }
-
+    
     private void addAdmin() {
         System.out.println("*********************************");
         System.out.println("First, set up an admin account.");
         System.out.println("Enter the details of admin account");
-
-//        ArrayList<Object> list = this.addDetail(true);
-        ArrayList<Object> list = this.add();
+        
+        ArrayList<Object> list = this.addDetail(true);
         this.admin = new Manager((String) list.get(0), (String) list.get(1), (String) list.get(2), (String) list.get(3), (String) list.get(4), (String) list.get(5));
         System.out.println("successfully added information");
         ATM atm = new ATM(this);
         atm.login();
     }
-
+    
     public void addAccount() {
-        System.out.println("*********************************");
-        System.out.println("Menu Add user account.");
-
         Scanner userInput = new Scanner(System.in);
         
         while (true) {
+            System.out.println("*********************************");
+            System.out.println("Menu Add user account.");
             System.out.print("Enter amount of all account = ");
             try {
                 int num = userInput.nextInt();
-                if (num > 0 && num <= 5) {
-                    System.out.println("Enter the details of each account.");
+                if (num > 0 && num + this.user.size() <= 5) {
+                    System.out.println("Enter the details of each account.");                    
                     for (int i = 1; i <= num; i++) {
                         System.out.println("*********************************");
                         System.out.println("No." + i);
                         ArrayList<Object> list = addDetail(false);
-                        if(list == null){
+                        if (list == null) {
                             i--;
                             continue;
                         }
@@ -61,26 +59,34 @@ public class Bank {
                     ATM atm = new ATM(this);
                     atm.showAdminMenu();
                 } else {
-                    System.out.println("\nThe number of accounts must be less than 5 accounts.");
+                    System.err.println("\nThe number of accounts must be less than 5 accounts.");
                     System.out.println("Press \"1\" for try again.");
+                    System.out.println("Press \"2\" for Back to admin menu Service.");
                     System.out.println("Press any key for exit the program.");
                     System.out.print("Choose : ");
                     String choice = userInput.next();
-                    if(!choice.equals("1")){
-                        System.err.println("Exit program.....");
-                        userInput.close();
-                        System.exit(0);
+                    switch (choice) {
+                        case "1" ->
+                            this.addAccount();
+                        case "2" -> {
+                            ATM atm = new ATM(this);
+                            atm.showAdminMenu();
+                        }
+                        default -> {
+                            System.err.println("Exit program.....");
+                            userInput.close();
+                            System.exit(0);
+                        }
                     }
                 }
-            }catch (java.util.InputMismatchException e) {
+            } catch (java.util.InputMismatchException e) {
                 System.err.println("something went wrong!!!");
                 this.addAccount();
             }
         }
         
-        
     }
-
+    
     private ArrayList<Object> addDetail(boolean isAdmin) {
         Scanner userInput = new Scanner(System.in);
         ArrayList<Object> list = new ArrayList<>();
@@ -90,7 +96,7 @@ public class Bank {
             nameUser.add(this.user.get(i).getUserName());
             idUser.add(this.user.get(i).getIdCardNumber());
         }
-
+        
         System.out.print("Enter Username : ");
         String userName = userInput.next();
         if (userName.length() > 10) {
@@ -104,7 +110,7 @@ public class Bank {
             return null;
         }
         list.add(userName);
-
+        
         System.out.print("Enter Password : ");
         String pass = userInput.next();
         if (pass.length() != 4) {
@@ -112,7 +118,7 @@ public class Bank {
             return null;
         }
         list.add(pass);
-
+        
         System.out.print("Enter First Name : ");
         String fName = userInput.next();
         if (fName.length() > 50) {
@@ -120,7 +126,7 @@ public class Bank {
             return null;
         }
         list.add(fName);
-
+        
         System.out.print("Enter Last Name : ");
         String lName = userInput.next();
         if (lName.length() > 50) {
@@ -128,7 +134,7 @@ public class Bank {
             return null;
         }
         list.add(lName);
-
+        
         System.out.print("Select gender (1 for Men, 2 for Women) : ");
         String sGender = userInput.next();
         String gender;
@@ -138,14 +144,14 @@ public class Bank {
             }
             case "2" ->
                 gender = "Women";
-
+            
             default -> {
                 System.err.println("Select \"1\" or \"2\" only!!!");
                 return null;
             }
         }
         list.add(gender);
-
+        
         System.out.print("Enter ID Card Number : ");
         String id = userInput.next();
         if (id.length() != 13) {
@@ -156,7 +162,7 @@ public class Bank {
             return null;
         }
         list.add(id);
-
+        
         if (isAdmin == false) {
             System.out.print("Balance : ");
             String balance = userInput.next();
@@ -178,27 +184,16 @@ public class Bank {
         }
         return list;
     }
-
+    
     public String getBankName() {
         return this.bankName;
     }
-
+    
     public ArrayList<Account> getUser() {
         return this.user;
     }
-
+    
     public Manager getAdmin() {
         return this.admin;
-    }
-
-    ArrayList<Object> add() {
-        ArrayList<Object> list = new ArrayList<>();
-        list.add("Admin");
-        list.add("1234");
-        list.add("Ch");
-        list.add("Bai");
-        list.add("Men");
-        list.add("1164304620084");
-        return list;
     }
 }
